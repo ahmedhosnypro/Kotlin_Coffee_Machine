@@ -1,5 +1,5 @@
 package machine
 
 enum class Action {
-    BUY, FILL, TAKE, WRONG_ACTION
+    BUY, FILL, TAKE, REMAINING, EXIT, WRONG_ACTION
 }

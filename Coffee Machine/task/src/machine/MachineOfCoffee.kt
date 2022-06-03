@@ -1,33 +1,30 @@
 package machine
 
 class MachineOfCoffee internal constructor(
-    waterV: Int, milkV: Int, coffeeM: Int, disposableCups: Int, storedMoney: Int
+    var waterV: Int,
+    var milkV: Int,
+    var coffeeM: Int,
+    var disposableCups: Int,
+    var storedMoney: Int
 ) {
-    var milkV = 0
-    var waterV = 0
-    var coffeeM = 0
-    var disposableCups = 0
-    var storedMoney = 0
 
-    init {
-        this.waterV = waterV
-        this.milkV = milkV
-        this.coffeeM = coffeeM
-        this.disposableCups = disposableCups
-        this.storedMoney = storedMoney
-    }
-
-    fun canMakeCoffee(coffeeType: CoffeeType, wantedCups: Int): Boolean {
+    fun canMakeCoffee(coffeeType: CoffeeType): Boolean {
         var canMakeCoffee = true
-        var cupsAvailable: Int
-        cupsAvailable = waterV / coffeeType.waterV
-        if (coffeeType !== CoffeeType.ESPRESSO) {
-            cupsAvailable = cupsAvailable.coerceAtMost(milkV / coffeeType.milkV)
-        }
-        cupsAvailable = cupsAvailable.coerceAtMost(coffeeM / coffeeType.coffeeM)
-
-        if (cupsAvailable < wantedCups) {
+        if (waterV / coffeeType.waterV < 1) {
             canMakeCoffee = false
+            println("Sorry, not enough water!")
+        }
+        if (coffeeType !== CoffeeType.ESPRESSO && milkV / coffeeType.milkV < 1) {
+            canMakeCoffee = false
+            println("Sorry, not enough milk!")
+        }
+        if (coffeeM / coffeeType.coffeeM < 1) {
+            canMakeCoffee = false
+            println("Sorry, not enough coffee!")
+        }
+        if (disposableCups < 1) {
+            canMakeCoffee = false
+            println("Sorry, not enough cups!")
         }
         return canMakeCoffee
     }

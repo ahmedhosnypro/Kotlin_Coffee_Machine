@@ -1,17 +1,18 @@
 package machine
 
+import machine.Print.printMachineStatus
 import java.util.*
 
 object Machine {
     private val scanner = Scanner(System.`in`)
 
-    fun start() {
-        val machine = MachineOfCoffee(400, 540, 120, 9, 550)
-        Print.printMachineStatus(machine)
+
+    fun start(machine: MachineOfCoffee): Boolean {
+        var isContinue = true
         println()
-        println("Write action (buy, fill, take):")
+        println("Write action (buy, fill, take, remaining, exit):")
         val inputAction = scanner.nextLine().trim { it <= ' ' }.uppercase(Locale.getDefault())
-        var action: Action = Action.WRONG_ACTION
+        var action: Action = Action.BUY
         try {
             action = Action.valueOf(inputAction)
         } catch (e: IllegalArgumentException) {
@@ -21,15 +22,21 @@ object Machine {
             Action.BUY -> buy(machine)
             Action.FILL -> fill(machine)
             Action.TAKE -> take(machine)
+            Action.REMAINING -> printMachineStatus(machine)
+            Action.EXIT -> isContinue = false
             else -> {
                 // to do
             }
         }
+        return isContinue
     }
 
     private fun buy(machine: MachineOfCoffee) {
         println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:")
-        val input = scanner.nextLine().trim { it <= ' ' }.uppercase(Locale.getDefault())
+        val input = scanner.nextLine().trim { it <= ' ' }.lowercase(Locale.getDefault())
+        if (input == "back") {
+            start(machine)
+        }
         var option = 0
         try {
             option = input.toInt()
@@ -44,28 +51,26 @@ object Machine {
     }
 
     private fun tryBuyCoffee(machine: MachineOfCoffee, coffeeType: CoffeeType) {
-        val wanted = 1
-        if (machine.canMakeCoffee(coffeeType, wanted)) {
+        if (machine.canMakeCoffee(coffeeType)) {
             buyCoffee(machine, coffeeType)
-            Print.printMachineStatus(machine)
+            println("I have enough resources, making you a coffee!")
         }
     }
 
     private fun buyCoffee(machine: MachineOfCoffee, coffeeType: CoffeeType) {
-        machine.waterV = machine.waterV - 1 * coffeeType.waterV
-        machine.milkV = machine.milkV - 1 * coffeeType.milkV
-        machine.coffeeM = machine.coffeeM - 1 * coffeeType.coffeeM
+        machine.waterV = machine.waterV - coffeeType.waterV
+        machine.milkV = machine.milkV - coffeeType.milkV
+        machine.coffeeM = machine.coffeeM - coffeeType.coffeeM
         machine.disposableCups = machine.disposableCups - 1
-        machine.storedMoney = machine.storedMoney + 1 * coffeeType.cost
+        machine.storedMoney = machine.storedMoney + coffeeType.cost
     }
-
 
     private fun fill(machine: MachineOfCoffee) {
         println("Write how many ml of water you want to add:")
         var waterV = 0
         var milkV = 0
         var coffeeM = 0
-        var cups = 0
+        var disposableCups = 0
         try {
             waterV = scanner.nextLine().trim { it <= ' ' }.toInt()
             println("Write how many ml of milk you want to add:")
@@ -73,22 +78,20 @@ object Machine {
             println("Write how many grams of coffee beans you want to add:")
             coffeeM = scanner.nextLine().trim { it <= ' ' }.toInt()
             println("Write how many disposable cups of coffee you want to add:")
-            cups = scanner.nextLine().trim { it <= ' ' }.toInt()
+            disposableCups = scanner.nextLine().trim { it <= ' ' }.toInt()
         } catch (e: IllegalArgumentException) {
             println("enter a valid value")
         }
-        machine.waterV += waterV
-        machine.milkV += milkV
-        machine.coffeeM += coffeeM
-        machine.disposableCups += cups
-        Print.printMachineStatus(machine)
+        machine.waterV = machine.waterV + waterV
+        machine.milkV = machine.milkV + milkV
+        machine.coffeeM = machine.coffeeM + coffeeM
+        machine.disposableCups = machine.disposableCups + disposableCups
     }
 
     private fun take(machine: MachineOfCoffee) {
         if (machine.storedMoney > 0) {
             println("I gave you $" + machine.storedMoney)
             machine.storedMoney = 0
-            Print.printMachineStatus(machine)
         }
     }
 }
