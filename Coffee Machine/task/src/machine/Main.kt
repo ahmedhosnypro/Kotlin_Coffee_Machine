@@ -1,7 +1,7 @@
 package machine
 
-import machine.Coffee.Companion.calcNumberOfServings
+import machine.Machine.start
 
 fun main() {
-    calcNumberOfServings()
+    start()
 }

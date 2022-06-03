@@ -359,6 +359,24 @@ files:
         }
     }
   learner_created: false
+- name: src/machine/Action.kt
+  visible: true
+  learner_created: true
+- name: src/machine/CoffeeType.kt
+  visible: true
+  learner_created: true
+- name: src/machine/Machine.kt
+  visible: true
+  learner_created: true
+- name: src/machine/MachineOfCoffee.kt
+  visible: true
+  learner_created: true
+- name: src/machine/Print.kt
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/67/stages/363/implement#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: Fri, 03 Jun 2022 20:23:17 UTC
 record: -1
